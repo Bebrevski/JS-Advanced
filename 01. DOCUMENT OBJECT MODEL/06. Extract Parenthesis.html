@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>extract</title>
+</head>
+<body>
+    <p id="content">
+        Rakiya (Bulgarian brandy) is home-made liquor
+        (alcoholic drink). It can be made of grapes, plums or
+        other fruits (even apples).
+    </p>
+    <script src="All%20functions.js">
+        function extractText() {
+            let data = document.getElementById('content').textContent;
+            let pattern = /\((.+?)\)/g;
+            let record = [];
+            let match = pattern.exec(data);
+
+            while (match) {
+                record.push(match[1]);
+
+                match = pattern.exec(data);
+            }
+
+            return record.join('; ');
+        }
+
+        extractText();
+    </script>
+</body>
+</html>
