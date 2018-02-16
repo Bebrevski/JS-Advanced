@@ -84,3 +84,31 @@ function attachGradientEvents() {
         result.textContent = '';
     }
 }
+
+function focus() {
+    let inputs = document.getElementsByTagName('input');
+
+    for (let input of inputs) {
+        input.addEventListener('focus', function () {
+            input.parentNode.className = 'focused';
+        });
+        input.addEventListener('blur', function () {
+            input.parentNode.className = '';
+        })
+    }
+}
+
+function validate() {
+    let validator = /^([\w\-.]+)@([a-z]+)(\.[a-z]+)+$/g;
+    let inputEmail = document.getElementById('email');
+
+    inputEmail.addEventListener('change', onChange);
+
+    function onChange() { // or event.target
+        if (validator.test(inputEmail.value)){
+            inputEmail.removeAttribute('class');
+        }else {
+            inputEmail.className = 'error';
+        }
+    }
+}
