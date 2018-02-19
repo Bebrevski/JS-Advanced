@@ -4,11 +4,9 @@ function create(sentences) {
         let div = document.createElement('div');
         div.innerHTML = `<p>${sentences[i]}</p>`;
         div.children[0].style.display = 'none';
-        div.addEventListener('click', show);
-
         document.getElementById('content').appendChild(div);
+        div.addEventListener('click', show);
     }
-
 
     function show() {
         event.target.children[0].style.display = 'block';

@@ -28,7 +28,7 @@ function attachEventsListeners() {
             case "in": distance /= inches; break;
             case "km": distance /= kilometers; break;
             case "ft": distance /= feet; break;
-            case "yd": distance /= yards; break;
+            case "yrd": distance /= yards; break;
         }
 
         switch (unitOut)
@@ -40,9 +40,9 @@ function attachEventsListeners() {
             case "in": distance *= inches; break;
             case "km": distance *= kilometers; break;
             case "ft": distance *= feet; break;
-            case "yd": distance *= yards; break;
+            case "yrd": distance *= yards; break;
         }
 
-        result.value = distance;
+        result.value = distance.toFixed(3);
     }
 }

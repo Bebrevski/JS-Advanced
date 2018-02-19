@@ -18,22 +18,22 @@ function attachEventsListeners() {
 
     function convertHours() {
         let hours = document.getElementById('hours').value;
-        document.getElementById('days').value = Math.round(hours / 24);
+        document.getElementById('days').value = hours / 24;
         document.getElementById('minutes').value = hours * 60;
         document.getElementById('seconds').value = hours * 3600;
     }
 
     function convertMinutes() {
         let minutes = document.getElementById('minutes').value;
-        document.getElementById('days').value = Math.round(minutes / (60 * 24));
-        document.getElementById('hours').value = Math.round(minutes / 60);
+        document.getElementById('days').value = minutes / (60 * 24);
+        document.getElementById('hours').value = minutes / 60;
         document.getElementById('seconds').value = minutes * 60;
     }
 
     function convertSeconds() {
         let seconds = document.getElementById('seconds').value;
-        document.getElementById('days').value = Math.round(seconds / (60 * 60 * 24));
+        document.getElementById('days').value = seconds / (60 * 60 * 24);
         document.getElementById('hours').value = Math.round(seconds / 3600);
-        document.getElementById('minutes').value = Math.round(seconds / 60);
+        document.getElementById('minutes').value = seconds / 60;
     }
 }
