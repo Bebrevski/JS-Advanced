@@ -1,0 +1,1 @@
+(arr, criteria) => arr.sort((a, b) => criteria === 'asc'? a - b : b - a);
