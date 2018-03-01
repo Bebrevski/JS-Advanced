@@ -49,27 +49,22 @@ let solution = function () {
             let selectedQuantity = Number(inputData[2]);
             let currentProductStats = products[selectedProduct];
 
-            let canProductBeCooked = true;
             for (let microElement in currentProductStats) {
-                if (currentProductStats.hasOwnProperty(microElement)){
+                if (currentProductStats.hasOwnProperty(microElement)) {
                     let microElementQuantity = currentProductStats[microElement];
-                    if (robot[microElement] < microElementQuantity * selectedQuantity){
-                 canProductBeCooked = false;
-                 return `Error: not enough ${microElement} in stock`;
-                 break;
+                    if (robot[microElement] < microElementQuantity * selectedQuantity) {
+                        return `Error: not enough ${microElement} in stock`;
                     }
                 }
             }
 
-            if (canProductBeCooked){
-                for (let microElement in currentProductStats) {
-                    if (currentProductStats.hasOwnProperty(microElement)){
-                        let microElementQuantity = currentProductStats[microElement];
-                        robot[microElement] -= microElementQuantity * selectedQuantity;
-                    }
+            for (let microElement in currentProductStats) {
+                if (currentProductStats.hasOwnProperty(microElement)) {
+                    let microElementQuantity = currentProductStats[microElement];
+                    robot[microElement] -= microElementQuantity * selectedQuantity;
                 }
-                return 'Success';
             }
+            return 'Success';
         }
     }
 };
