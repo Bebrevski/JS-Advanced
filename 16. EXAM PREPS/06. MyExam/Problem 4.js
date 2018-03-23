@@ -1,64 +1,91 @@
 class PaymentManager {
     constructor(title) {
         this.title = title;
-        this._id = '#';
+        this.table = this.createTable();
     }
 
     render(id) {
-        this._id += id;
-        let outerDiv = $('#' + id);
+        $(`#${id}`).append(this.table);
+    }
 
+    createTable() {
         let table = $('<table>');
-        let caption = $('<caption>').text(`${this.title} Payment Manager`);
+        let caption = $('<caption>')
+            .text(this.title + ' Payment Manager');
+
+        let thead = $('<thead>')
+            .append($('<tr>')
+                .append($('<th>')
+                    .addClass('name')
+                    .text('Name'))
+                .append($('<th>')
+                    .addClass('category')
+                    .text('Category'))
+                .append($('<th>')
+                    .addClass('price')
+                    .text('Price'))
+                .append($('<th>')
+                    .text('Actions')));
+
+        let tbody = $('<tbody>').addClass('payments');
+
+        let tfoot = $('<tfoot >')
+            .addClass('input-data')
+            .append($('<tr>')
+                .append($('<td>')
+                    .append($('<input>')
+                        .attr('name', 'name')
+                        .attr('type', 'text')))
+                .append($('<td>')
+                    .append($('<input>')
+                        .attr('name', 'category')
+                        .attr('type', 'text')))
+                .append($('<td>')
+                    .append($('<input>')
+                        .attr('name', 'price')
+                        .attr('type', 'number')))
+                .append($('<td>')
+                    .append($('<button>')
+                        .on('click', this.addRow)
+                        .text('Add'))));
+
+        table.append(caption)
+            .append(thead)
+            .append(tbody)
+            .append(tfoot);
+
+        return table;
+    }
+
+
+    addRow() {
+        let name = $(this).parent().parent().find('input[name=\'name\']');
+        let category =$(this).parent().parent().find('input[name=\'category\']');
+        let price = $(this).parent().parent().find('input[name=\'price\']');
+
+        if(name.val() === '' || category.val() === '' || price.val() === '' || isNaN(price.val())) return;
 
         let tr = $('<tr>')
-            .append($('<th class="name">').text('Name'))
-            .append($('<th class="category">').text('Category'))
-            .append($('<th class="price">').text('Price'))
-            .append($('<th>').text('Actions'));
-        let tHead = $('<thead>').append(tr);
+            .append($('<td>').text(name.val()).attr('type','text'))
+            .append($('<td>').text(category.val()).attr('type','text'))
+            .append($('<td>').text(Number(price.val())).attr('type','number'))
+            .append($('<td>')
+                .append($('<button>')
+                    .on('click', function (){
+                        $(this).parent().parent().remove();
+                    })
+                    .text('Delete')));
 
-        let tBody = $('<tbody class="payments">');
+        let currentTable = $(this)
+            .parent()
+            .parent()
+            .parent()
+            .parent().parent().find('tbody');
 
-        let tFoot = $('<tfoot class="input-data">');
-        let trFooter = $('<tr>')
-            .append($('<td>').append($('<input name="name" type="text">')))
-            .append($('<td>').append($('<input name="category" type="text">')))
-            .append($('<td>').append($('<input name="price" type="number">')))
-            .append($('<td>').append($('<button>Add</button>').click(
-                this.addElement.bind(this)
-            )));
-        tFoot.append(trFooter);
-
-        table.append(caption).append(tHead).append(tBody).append(tFoot);
-        outerDiv.append(table);
+        currentTable.append(tr);
+        name.val('');
+        category.val('');
+        price.val('');
     }
 
-    addElement() {
-        let name = $('.input-data').find('td:nth-child(1) input').val();
-        let category = $('.input-data').find('td:nth-child(2) input').val();
-        let number = $('.input-data').find('td:nth-child(3) input').val();
-
-        $('.input-data').find('td:nth-child(1) input').val('');
-        $('.input-data').find('td:nth-child(2) input').val('');
-        $('.input-data').find('td:nth-child(3) input').val('');
-
-        if (!(name === '' || category === '' || number === '')){
-            let tBody = $(`${this._id} .payments`);
-
-            let tr = $('<tr>')
-                .append($('<td>').text(`${name}`))
-                .append($('<td>').text(`${category}`))
-                .append($('<td>').text(`${Number(number)}`))
-                .append($('<td>').append($('<button>Delete</button>').click(
-                    this.delElement
-                )));
-
-            tBody.append(tr);
-        }
-    }
-
-    delElement() {
-        $(this).parent().parent().remove();
-    }
 }

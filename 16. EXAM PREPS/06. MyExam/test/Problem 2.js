@@ -1,218 +1,134 @@
 let expect = require('chai').expect;
-let mocha = require('mocha');
-let PaymentPackage = require('../Problem 2');
 
-describe('Test class', function () {
+let PaymentPackage = require('../02.Problem 2');
+describe('Test PaymentPackage class', function () {
+    it('Has initial values', function () {
+        expect(PaymentPackage.prototype.hasOwnProperty('name')).to.be.equal(true);
+        expect(PaymentPackage.prototype.hasOwnProperty('value')).to.be.equal(true);
+        expect(PaymentPackage.prototype.hasOwnProperty('VAT')).to.be.equal(true);
+        expect(PaymentPackage.prototype.hasOwnProperty('active')).to.be.equal(true);
+        expect(PaymentPackage.prototype.hasOwnProperty('toString')).to.be.equal(true);
 
-    describe('Test initialization getter name', function () {
-        it('takes valid parameters correct', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            expect(myClass.name).to.equal('Pesho');
+    });
+
+    it('Test with invalid params', function () {
+        expect(() => new PaymentPackage()).to.throw();
+        expect(() => new PaymentPackage(3,6,6)).to.throw();
+        expect(() => new PaymentPackage({},'str',3)).to.throw();
+    });
+
+
+    it('Test Default value in obj', function () {
+        let payment = new PaymentPackage('test', 20);
+
+        expect(payment.name).to.not.be.undefined;
+        expect(payment.value).to.not.be.undefined;
+        expect(payment.VAT).to.not.be.undefined;
+        expect(payment.active).to.not.be.undefined;
+        expect(payment.toString()).to.not.be.undefined;
+
+        expect(payment.VAT).to.be.equal(20);
+        expect(payment.active).to.be.equal(true);
+
+    });
+
+    describe('Test name', function () {
+        it('With no param should throw error', function () {
+            expect(() => new PaymentPackage()).to.throw();
         });
-        it('throw error if name is not a string', () => {
-            expect(() => new PaymentPackage(10, 22)).to.throw(Error)
+
+        it('If it is not string should throw error', function () {
+            expect(() => new PaymentPackage(3, 3)).to.throw();
         });
-        it('throw error if name is not a string', () => {
-            let myClass = new PaymentPackage('sdfgsdg', 14);
-            expect(() => myClass.VAT = -1).to.throw(Error)
+
+        it('If it is empty string should throw error', function () {
+            expect(() => new PaymentPackage('', 3)).to.throw();
         });
-        it('should throw error', () => {
-            let myClass = new PaymentPackage('again', 11);
-            expect(() => myClass.value = -11).to.throw(Error)
+
+        it('If it is not string should throw error', function () {
+            expect(() => new PaymentPackage({}, 3)).to.throw();
         });
-        it('throw error if name is not a string', () => {
-            let myClass = new PaymentPackage('sdgsdg', 12);
-            expect(() => myClass.VAT = 'o').to.throw(Error)
-        });
-        it('throw error if name is not a string', function () {
-            let myClass;
-            expect(() => {
-                myClass = new PaymentPackage({}, 10)
-            }).to.throw(Error);
-        });
-        it('should throw error', () => {
-            expect(() => new PaymentPackage('asdas', -1)).to.throw(Error)
-        });
-        it('should throw error', () => {
-            let myClass = new PaymentPackage('again', 11);
-            expect(() => myClass.name = 22).to.throw(Error)
-        });
-        it('should throw error', () => {
-            expect(() => new PaymentPackage('nsdfsdfame', 'opasdaa')).to.throw(Error)
-        });
-        it('should throw error', () => {
-            expect(() => new PaymentPackage('', 2)).to.throw(Error)
-        });
-        it('throw error if name is empty string', function () {
-            let myClass;
-            expect(() => {
-                myClass = new PaymentPackage('', 10)
-            }).to.throw(Error);
-        });
-        it('throw error if no parameters are given', function () {
-            expect(() => {
-                new PaymentPackage()
-            }).to.throw(Error);
-        });
-        it('should throw error', () => {
-            let myClass = new PaymentPackage('nasdfsdfme', 1);
-            expect(myClass.VAT).to.equal(20)
-        });
-        it('should throw error', () => {
-            let myClass = new PaymentPackage('gjkghkj', 1);
-            expect(myClass.active).to.equal(true)
+
+        it('If it is valid type should not throw error', function () {
+            expect(() => new PaymentPackage('test', 3)).to.not.throw();
         });
     });
 
-    describe('Test initialization getter value', function () {
-        it('takes valid parameters correct', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            expect(myClass.value).to.equal(10);
+    describe('Test value param', function () {
+        it('If it is not number should throw error', function () {
+            expect(() => new PaymentPackage('test', '')).to.throw();
         });
-        it('throw error if value is not a number', function () {
-            let myClass;
-            expect(() => {
-                myClass = new PaymentPackage('Pesho', '10')
-            }).to.throw(Error);
+
+        it('If it is not number should throw error', function () {
+            expect(() => new PaymentPackage('test', {})).to.throw();
         });
-        it('should throw error', () => {
-            let myClass = new PaymentPackage('again', 11);
-            expect(() => myClass.active = 'false').to.throw(Error)
+
+        it('Without param should throw error', function () {
+            expect(() => new PaymentPackage('test')).to.throw();
         });
-        it('throw error if value is negative', function () {
-            let myClass;
-            expect(() => {
-                myClass = new PaymentPackage('', -1)
-            }).to.throw(Error);
+
+        it('If it is a negative number should throw error', function () {
+            expect(() => new PaymentPackage('test', -5)).to.throw();
         });
-        it('throw error if no input', function () {
-            let myClass;
-            expect(() => {
-                myClass = new PaymentPackage()
-            }).to.throw(Error);
+
+        it('With valid param should not throw error', function () {
+            expect(() => new PaymentPackage('test', 5)).to.not.throw();
         });
     });
 
-    describe('Test VAT', function () {
-        it('has default value 20', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            expect(myClass.VAT).to.equal(20);
+    describe('Test instance of a class', function () {
+        let payment = new PaymentPackage('test', 2);
+        payment.name = 'test';
+
+        it('Test name', function () {
+            expect(payment.name).to.be.equal('test');
+            expect(() => payment.name = 3).to.throw();
+            expect(() => payment.name = {}).to.throw();
+            expect(() => payment.name = 'newName').to.not.throw();
+            expect(() => payment.name = '').to.throw();
+            expect(() => payment.name = null).to.throw();
+            expect(() => payment.name = undefined).to.throw();
         });
-        it('can change VAT', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            myClass.VAT = 100;
-            expect(myClass.VAT).to.equal(100);
+
+        it('Test vat', function () {
+            expect(() => payment.VAT = -3).to.throw();
+            expect(() => payment.VAT = {}).to.throw();
+            expect(() => payment.VAT = 'newName').to.throw();
+            expect(() => payment.VAT = '').to.throw();
+            expect(() => payment.VAT = null).to.throw();
+            expect(() => payment.VAT = undefined).to.throw();
         });
-        it('throw error if VAT is not a number', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            expect(() => {
-                myClass.VAT = 'some'
-            }).to.throw(Error);
+
+        it('Test value', function () {
+            expect(payment.value).to.be.equal(2);
+            expect(() => payment.value = 3).to.not.throw();
+            expect(() => payment.value = {}).to.throw();
+            expect(() => payment.value = -6).to.throw();
+            expect(() => payment.value = 'str').to.throw();
+            expect(() => payment.value = null).to.throw();
+            expect(() => payment.value = undefined).to.throw();
         });
-        it('throw error if VAT is negative', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            expect(() => {
-                myClass.VAT = -1
-            }).to.throw(Error);
+
+        it('Test active param', function () {
+            expect(payment.active).to.be.equal(true);
+            expect(() => payment.active = 3).to.throw();
+            expect(() => payment.active = {}).to.throw();
+            expect(() => payment.active = -6).to.throw();
+            expect(() => payment.active = 'str').to.throw();
+            expect(() => payment.active = false).to.not.throw();
+            expect(() => payment.active = null).to.throw();
+            expect(() => payment.active = undefined).to.throw();
+        });
+
+
+        it('Test toString', function () {
+            let pay = new PaymentPackage('test', 2);
+
+            pay.active = true;
+            expect(pay.toString()).to.be.equal('Package: test\n- Value (excl. VAT): 2\n- Value (VAT 20%): 2.4');
+
+            pay.active = false;
+            expect(pay.toString()).to.be.equal('Package: test (inactive)\n- Value (excl. VAT): 2\n- Value (VAT 20%): 2.4');
         });
     });
-
-    describe('Test active', function () {
-        it('defaul is true', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            expect(myClass.active).to.equal(true);
-        });
-        it('', () => {
-            let myClass = new PaymentPackage('opa', 1);
-            myClass.VAT = 0;
-            expect(myClass.VAT).to.equal(0)
-        });
-        it('can change activity', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            myClass.active = false;
-            expect(myClass.active).to.equal(false);
-        });
-        it('throw error if not bool', function () {
-            let myClass = new PaymentPackage('Pesho', 10);
-            expect(() => {
-                myClass.active = 'Pesho'
-            }).to.throw(Error);
-        });
-        it('should throw error', () => {
-            let myClass = new PaymentPackage('some', 120);
-            expect(() => myClass.active = 'true').to.throw(Error)
-        });
-    });
-
-    describe('Test toString', function () {
-        it('print correct if true', function () {
-            let myClass = new PaymentPackage('HR Services', 1500);
-            let expecting = `Package: HR Services\n- Value (excl. VAT): 1500\n- Value (VAT 20%): 1800`;
-            expect(expecting).to.equal(`Package: HR Services\n- Value (excl. VAT): 1500\n- Value (VAT 20%): 1800`);
-        });
-        it('', () => {
-            let myClass = new PaymentPackage('opa', 1);
-            myClass.active = false;
-            expect(myClass.active).to.equal(false)
-        });
-        it('print correct if false', function () {
-            let myClass = new PaymentPackage('HR Services', 1500);
-            myClass.active = false;
-            let expecting = `Package: HR Services (inactive)\n- Value (excl. VAT): 1500\n- Value (VAT 20%): 1800`;
-            expect(expecting).to.equal(`Package: HR Services (inactive)\n- Value (excl. VAT): 1500\n- Value (VAT 20%): 1800`);
-        });
-    });
-
-    describe('class have properties', function () {
-        it("It should have initialized all getter and setters", function () {
-            let myClass = new PaymentPackage('HR Services', 1500);
-            expect(Object.getPrototypeOf(myClass).hasOwnProperty('name')).to.be.equal(true);
-            expect(Object.getPrototypeOf(myClass).hasOwnProperty('value')).to.be.equal(true);
-            expect(Object.getPrototypeOf(myClass).hasOwnProperty('VAT')).to.be.equal(true);
-            expect(Object.getPrototypeOf(myClass).hasOwnProperty('active')).to.be.equal(true);
-            expect(Object.getPrototypeOf(myClass).hasOwnProperty('toString')).to.be.equal(true);
-        });
-        it('gdfg', () => {
-            let myClass = new PaymentPackage('nasdame', 1);
-            myClass.value = 12;
-            expect(myClass.value).to.equal(12)
-        })
-    });
-
-    describe('is instance of class', function () {
-        it('', () => {
-            let myClass = new PaymentPackage('nasdgsdgme', 31);
-            myClass.name = 'nema nikoj';
-            expect(myClass.name).to.equal('nema nikoj')
-        });
-        it('s', () => {
-            let myClass = new PaymentPackage('opa', 21);
-            myClass.active = true;
-            expect(myClass.active).to.equal(true)
-        });
-        it("is a instance of class", function () {
-            let myClass = new PaymentPackage('p', 1);
-            expect(typeof myClass).to.equal('object');
-        });
-        it('', () => {
-            let myClass = new PaymentPackage('naasdasdme', 143);
-            myClass.value = 0;
-            expect(myClass.value).to.equal(0)
-        });
-    });
-
-    describe('more test', function () {
-
-        it('', () => {
-            let myClass = new PaymentPackage('name', 1);
-            myClass.active = false;
-            expect(myClass.toString()).to.equal('Package: name (inactive)\n- Value (excl. VAT): 1\n- Value (VAT 20%): 1.2')
-        });
-        it('should have properties', () => {
-            let Pp = new PaymentPackage('name', 1);
-
-            expect(Pp.toString()).to.equal('Package: name\n- Value (excl. VAT): 1\n- Value (VAT 20%): 1.2')
-        })
-    });
-
 });

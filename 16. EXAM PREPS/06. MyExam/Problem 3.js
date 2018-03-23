@@ -1,124 +1,98 @@
 class PaymentProcessor {
-    constructor(obj) {
-        this.options = this.setOptions(obj);
-        this.collection = [];
+    constructor(options) {
+        this.options = options;
+        if (!options) {
+            this.options = { types: ["service", "product", "other"], precision: 2
+            }
+        }else{
+            if(!options.hasOwnProperty('types')){
+                this.options['types'] = ["service", "product", "other"];
+            }else {
+                this.options['types'] = options['types'];
+            }
+
+            if(!options.hasOwnProperty('precision')){
+                this.options['precision'] = 2;
+            }else {
+                this.options['precision'] = options['precision'];
+            }
+        }
+
+        this.payments = [];
+        this.balance = 0;
     }
 
     registerPayment(id, name, type, value) {
-        if (id === '' || name === '') {
-            throw new Error();
-        }
-        if (isNaN(value) && value !== null) {
-            throw new Error();
-        }
-        for (let obj of this.collection) {
-            if (obj.id === id){
-                throw new Error();
-            }
-        }
-        let found = false;
-        for (let currentType of this.options.types) {
-            if (currentType === type){
-              found = true;
-              break;
-            }
-        }
-        if (!found){
-            throw new Error();
+        if(id === '' ||
+            name === '' ||
+            typeof(value) !== 'number' ||
+            !this.options.types.includes(type) ||
+            this.payments.map(x=> x.id).includes(id)){
+
+            throw new  Error('invalid type');
         }
 
-        this.collection.push({
-            id: id,
-            name: name,
-            type: type,
-            value: Number(value)
-        });
+        value = value.toFixed(Number(this.options.precision));
 
+        this.payments.push({id,name,type,value});
+        this.balance += Number(value);
     }
 
     deletePayment(id) {
-        let found = false;
-        let index;
-        for (let i = 0; i < this.collection.length; i++) {
-            if (this.collection[i].id === id){
-              found = true;
-              index = i;
+        let payment;
+        for(let currentPayment of this.payments){
+            if(currentPayment.id === id){
+                payment = currentPayment;
             }
         }
-        if (!found){
-            throw new Error();
+
+        if(!payment){
+            throw new Error('ID not found');
         }
 
-        this.collection.splice(index, 1);
-
+        this.balance -= Number(payment.value);
+        for (let i =0; i < this.payments.length; i++)
+            if (this.payments[i].id === payment.id) {
+                this.payments.splice(i,1);
+                break;
+            }
     }
 
     get(id) {
-        let found = false;
-        let index;
-        for (let i = 0; i < this.collection.length; i++) {
-            if (this.collection[i].id === id){
-                found = true;
-                index = i;
-                break;
+        let payment;
+        for(let currentPayment of this.payments){
+            if(currentPayment.id === id){
+                payment = currentPayment;
             }
         }
-        if (!found){
-            throw new Error();
-        }
-        let output = `Details about payment ID: ${id}\n`;
-        output += `- Name: ${this.collection[index].name}\n`;
-        output += `- Type: ${this.collection[index].type}\n`;
-        output += `- Value: ${this.collection[index].value}`;
 
-        return output;
+        if(payment === undefined){
+            throw new Error('ID not found');
+        }
+
+        let result = `Details about payment ID: ${payment.id}\n`;
+        result += `- Name: ${payment.name}\n`;
+        result +=`- Type: ${payment.type}\n`;
+        result += `- Value: ${payment.value}`;
+
+        return result;
     }
 
-     setOptions(options) {
-        if (options === undefined){
-          return {
-              types: ["service", "product", "other"],
-              precision: 2
-          }
-        }
-        if (options.precision === undefined && Array.isArray(options.types)){
-          return {
-              types: options.types,
-              precision: 2
-          }
-        }
-        if (options.types === undefined && !isNaN(options.precision)){
-            return {
-                types: ["service", "product", "other"],
-                precision: Number(options.precision)
-            }
-
+    setOptions(options) {
+        if(options.hasOwnProperty('types')){
+            this.options.types = options.types;
         }
 
-        return {
-            types: options.types,
-            precision: Number(options.precision)
+        if(options.hasOwnProperty('precision')){
+            this.options.precision = options.precision;
         }
     }
 
     toString() {
-        let output = 'Summary\n';
-        output += `- Payments: ${this.collection.length}\n`;
-        let balance = 0;
+        let result = `Summary:\n`;
+        result += `- Payments: ${this.payments.length}:\n`;
+        result += `- Balance: ${this.balance}`;
 
-        for (let obj of this.collection) {
-            balance += obj.value;
-        }
-        output += `- Balance: ${balance.toFixed(this.options.precision)}`;
-
-        return output;
+        return result;
     }
 }
-
-// Initialize processor with custom precision
-const transactionLog = new PaymentProcessor({precision: 5});
-console.log(transactionLog);
-
-
-
-
